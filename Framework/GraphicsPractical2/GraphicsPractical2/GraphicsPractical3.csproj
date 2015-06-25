@@ -119,9 +119,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GraphicsPractical2Content\GraphicsPractical2Content.contentproj">
-      <Name>GraphicsPractical2Content</Name>
+    <ProjectReference Include="..\GraphicsPractical2Content\GraphicsPractical3Content.contentproj">
+      <Name>GraphicsPractical3Content</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{270B4DCE-D77B-422A-BA4D-9ABA9D0A8C3B}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

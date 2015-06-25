@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsPractical2", "GraphicsPractical2\GraphicsPractical2\GraphicsPractical2.csproj", "{75ABE3A0-64D3-4B4B-90FB-DAAF10C8E83C}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsPractical3", "GraphicsPractical2\GraphicsPractical2\GraphicsPractical3.csproj", "{75ABE3A0-64D3-4B4B-90FB-DAAF10C8E83C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "GraphicsPractical2Content", "GraphicsPractical2\GraphicsPractical2Content\GraphicsPractical2Content.contentproj", "{270B4DCE-D77B-422A-BA4D-9ABA9D0A8C3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsPractical3Content", "GraphicsPractical2\GraphicsPractical2Content\GraphicsPractical3Content.contentproj", "{270B4DCE-D77B-422A-BA4D-9ABA9D0A8C3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

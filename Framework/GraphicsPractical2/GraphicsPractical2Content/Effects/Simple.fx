@@ -1,14 +1,14 @@
 //------------------------------------------- Defines -------------------------------------------
 
 #define Pi 3.14159265
-
+#define MAX_LIGHTS 5
 //------------------------------------- Top Level Variables -------------------------------------
 
 // Top level variables can and have to be set at runtime
 float4 DiffuseColor,SpecularColor :COLOR0;
 float ColorStrength;
 float3 PointLight;
-
+float3 LightPositions[MAX_LIGHTS];
 texture Cobblestones;
 
 float3 Eye;
@@ -61,17 +61,23 @@ float4 NormalColor(VertexShaderOutput input) : TEXCOORD1
 float4 LambertianPhong(VertexShaderOutput input)
 
 {
-	float3 normLightVector = normalize(PointLight - input.Position3D.xyz);
-		float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
-		float a = clamp(dot(normLightVector, worldNormals), 0, 1);
-	float4 color = DiffuseColor * a;
-		//the phong shading
-		float3 eyeNorm = normalize(Eye - input.Position3D.xyz);
-		float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
-		float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
-	b = mul(SpecularIntensity, pow(b, SpecularPower));
-	color = color + (SpecularColor * b);
-	return color;
+	float4 tempcolor = float4(0, 0, 0, 0);
+	for (int x = 0; x < 5; x++)
+	{
+
+		float3 normLightVector = normalize(LightPositions[x] - input.Position3D.xyz);
+			float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
+			float a = clamp(dot(normLightVector, worldNormals), 0, 1);
+		float4 color = DiffuseColor * a;
+			//the phong shading
+			//float3 eyeNorm = normalize(Eye - input.Position3D.xyz);
+		//	float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
+			//float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
+		//b = mul(SpecularIntensity, pow(b, SpecularPower));
+		//color = color + (SpecularColor * b);
+		tempcolor = color + tempcolor;
+	}
+	return tempcolor;
 }
 
 // Implement the Procedural texturing assignment here
@@ -108,7 +114,7 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 
 float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 {
-
+	
 	float4 color = LambertianPhong(input);
 
 	color += mul(AmbientColor, AmbientIntensity);

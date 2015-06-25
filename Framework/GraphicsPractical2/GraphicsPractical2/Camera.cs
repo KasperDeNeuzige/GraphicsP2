@@ -16,7 +16,7 @@ namespace GraphicsPractical2
         private Vector3 up;
         private Vector3 eye;
         private Vector3 focus;
-
+        private Vector3[] LightPositions;
         private Vector3 PointLight = new Vector3(50,50,50);
 
         // Calculated matrices
@@ -28,7 +28,12 @@ namespace GraphicsPractical2
             this.up = camUp;
             this.eye = camEye;
             this.focus = camFocus;
-
+            LightPositions = new Vector3[5];
+            LightPositions[0] = new Vector3(1, 1, 1);
+            LightPositions[1] = new Vector3(1, 100, 50);
+            LightPositions[2] = new Vector3(100, 30, 10);
+            LightPositions[3] = new Vector3(20, 20, 25);
+            LightPositions[4] = new Vector3(-50, 20, 100);
             // Create matrices.
             this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 300.0f);
             this.updateViewMatrix();
@@ -86,7 +91,8 @@ namespace GraphicsPractical2
             effect.Parameters["View"].SetValue(this.ViewMatrix);
             effect.Parameters["Projection"].SetValue(this.ProjectionMatrix);
             effect.Parameters["Eye"].SetValue(this.Eye);
-
+            // set the five light positions
+            effect.Parameters["LightPositions"].SetValue(this.LightPositions);
             //set point light
             effect.Parameters["PointLight"].SetValue(this.PointLight);
 
