@@ -5,20 +5,18 @@
 //------------------------------------- Top Level Variables -------------------------------------
 
 // Top level variables can and have to be set at runtime
-float4 DiffuseColor : COLOR0;
+float4 DiffuseColor,SpecularColor :COLOR0;
 float ColorStrength;
-float3 PointLight[5];
+float3 PointLight;
 
 texture Cobblestones;
 
 float3 Eye;
 
 float4 AmbientColor;
-float AmbientIntensity;
+float AmbientIntensity,SpecularPower,SpecularIntensity;
 // Matrices for 3D perspective projection 
 float4x4 View, Projection, World;
-
-float4x4 InvTransWorld;
 
 //---------------------------------- Input / Output structures ----------------------------------
 
@@ -60,6 +58,22 @@ float4 NormalColor(VertexShaderOutput input) : TEXCOORD1
 	return input.Normal;
 }
 
+float4 LambertianPhong(VertexShaderOutput input)
+
+{
+	float3 normLightVector = normalize(PointLight - input.Position3D.xyz);
+		float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
+		float a = clamp(dot(normLightVector, worldNormals), 0, 1);
+	float4 color = DiffuseColor * a;
+		//the phong shading
+		float3 eyeNorm = normalize(Eye - input.Position3D.xyz);
+		float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
+		float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
+	b = mul(SpecularIntensity, pow(b, SpecularPower));
+	color = color + (SpecularColor * b);
+	return color;
+}
+
 // Implement the Procedural texturing assignment here
 float4 ProceduralColor(VertexShaderOutput input)
 {
@@ -84,37 +98,19 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 	
 	//output.TexCoord = input.TexCoord;
 	// kleur opdracht
-	output.Normal = mul(input.Normal, InvTransWorld);
+	output.Normal = mul(input.Normal, World);
 	
 	// checkerboard opdracht
 	output.Position3D	 = worldPosition;
 
 	return output;
 }
-sampler TextureSampler = sampler_state
-{
-	Texture = <Cobblestones>;
-	MinFilter = Linear;
-	MagFilter = Linear;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
+
 float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 {
-	//float4 color = NormalColor(input);
-	//float4 color = ProceduralColor(input);
-	float3 LichtVector = normalize(PointLight - input.Position3D);
 
-	float3 Normals = normalize(mul(input.Normal, (float3x3)World));
+	float4 color = LambertianPhong(input);
 
-	// ambient lighting
-	float4 color = mul(dot(Normals, LichtVector), DiffuseColor);
-	if (color.x < 0)
-		color.x = 0;
-	if (color.y < 0)
-		color.y = 0;
-	if (color.z < 0)
-		color.z = 0;
 	color += mul(AmbientColor, AmbientIntensity);
 	
 	
@@ -122,32 +118,7 @@ float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 	return color;
 }
 
-float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
-{
-	//The Ambient Shading
-	float4 color = AmbientIntensity*AmbientColor;
-	for (int a = 0; a < MAX_LIGHTS; a++)
-	{
-		color = color + LambertianPhong(input, a);
-	}
-	return color;
-}
-
-	float4 LambertianPhong(VertexShaderOutput input, int i)
-
-	{
-		float3 normLightVector = normalize(PointLight - input.Position3D.xyz);
-			float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)InvTransWorld));
-			float a = clamp(dot(normLightVector, worldNormals), 0, 1);
-		float4 color = DiffuseColor * a;
-			//the phong shading
-			float3 eyeNorm = normalize(CameraEye - input.Position3D.xyz);
-			float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
-			float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
-		b = mul(SpecularIntensity, pow(b, SpecularPower));
-		color = color + (SpecularColor * b);
-		return color;
-	}
+	
 
 technique Simple
 {

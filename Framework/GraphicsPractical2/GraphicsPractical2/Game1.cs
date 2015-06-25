@@ -133,10 +133,8 @@ namespace GraphicsPractical2
             this.camera.SetEffectParameters(effect);
             this.modelMaterial.SetEffectParameters(effect);
 
-            Matrix WorldMatrix = Matrix.CreateScale(10.0f, 6.5f, 2.5f);
+            Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
-            WorldMatrix = Matrix.Invert(Matrix.Transpose(WorldMatrix));
-            effect.Parameters["InvTransWorld"].SetValue(WorldMatrix);
             // Draw the model
             mesh.Draw();
 
