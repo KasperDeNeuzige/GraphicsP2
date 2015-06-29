@@ -17,7 +17,7 @@ float3 Eye;
 float4 AmbientColor;
 float AmbientIntensity;
 // Matrices for 3D perspective projection 
-float4x4 View, Projection, World;
+float4x4 View, Projection, World,Size;
 
 //---------------------------------- Input / Output structures ----------------------------------
 
@@ -99,7 +99,8 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 
 	// Do the matrix multiplications for perspective projection and the world transform
 	float4 worldPosition = mul(input.Position3D, World);
-    float4 viewPosition  = mul(worldPosition, View);
+	float4 resized = mul(worldPosition, Size);
+    float4 viewPosition  = mul(resized, View);
 	output.Position2D    = mul(viewPosition, Projection);
 	output.Position3D	= input.Position3D;
 	

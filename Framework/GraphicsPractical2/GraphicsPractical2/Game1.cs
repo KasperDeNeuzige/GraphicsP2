@@ -133,8 +133,10 @@ namespace GraphicsPractical2
             this.camera.SetEffectParameters(effect);
             this.modelMaterial.SetEffectParameters(effect);
 
-            Matrix WorldMatrix = Matrix.CreateScale(200.0f, 200.0f, 200.0f);
+            Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
+            Matrix Size = Matrix.CreateScale(20.0f, 20.0f, 20.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
+            effect.Parameters["Size"].SetValue(Size);
             // Draw the model
             mesh.Draw();
 
