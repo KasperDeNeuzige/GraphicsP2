@@ -17,7 +17,6 @@ namespace GraphicsPractical2
         private Vector3 eye;
         private Vector3 focus;
         private Vector3[] LightPositions;
-        private Vector3[] LightColors;
         private Vector3 PointLight = new Vector3(50,50,50);
 
         // Calculated matrices
