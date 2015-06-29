@@ -119,7 +119,9 @@ float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 
 	color += mul(AmbientColor, AmbientIntensity);
 	
-	
+	// zwart wit maken comment weg voor kleur
+	color.rgb = color.r * 0.3 + color.g * 0.59 * color.b * 0.11;
+
 	//color = tex2D(TextureSampler, float2(input.TexCoord.x, input.TexCoord.y));
 	return color;
 }
