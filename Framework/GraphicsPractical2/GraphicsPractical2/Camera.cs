@@ -17,6 +17,7 @@ namespace GraphicsPractical2
         private Vector3 eye;
         private Vector3 focus;
         private Vector3[] LightPositions;
+        private Vector4[] LightColors;
         private Vector3 PointLight = new Vector3(50,50,50);
 
         // Calculated matrices
@@ -29,11 +30,18 @@ namespace GraphicsPractical2
             this.eye = camEye;
             this.focus = camFocus;
             LightPositions = new Vector3[5];
-            LightPositions[0] = new Vector3(1, 1, 1);
-            LightPositions[1] = new Vector3(1, 100, 50);
-            LightPositions[2] = new Vector3(100, 30, 10);
-            LightPositions[3] = new Vector3(20, 20, 25);
-            LightPositions[4] = new Vector3(-50, 20, 100);
+            LightColors = new Vector4[5];
+            LightPositions[0] = new Vector3(10, 5, 30);
+            LightColors[0] = Color.Blue.ToVector4();
+            LightPositions[1] = new Vector3(1, 5, 50);
+            LightColors[1] = Color.Yellow.ToVector4();
+            LightPositions[2] = new Vector3(100, 5, 10);
+            LightColors[2] = Color.Green.ToVector4();
+            LightPositions[3] = new Vector3(20, 5, 25);
+            LightColors[3] = Color.Red.ToVector4();
+            LightPositions[4] = new Vector3(0, 5, 10);
+            LightColors[4] = Color.Purple.ToVector4();
+
             // Create matrices.
             this.projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 300.0f);
             this.updateViewMatrix();
@@ -93,9 +101,9 @@ namespace GraphicsPractical2
             effect.Parameters["Eye"].SetValue(this.Eye);
             // set the five light positions
             effect.Parameters["LightPositions"].SetValue(this.LightPositions);
+            effect.Parameters["LightColors"].SetValue(this.LightColors);
             //set point light
             effect.Parameters["PointLight"].SetValue(this.PointLight);
-
             // If the shader has a global called "CameraPosition", we set it to the right Eye position of the camera.
             EffectParameter cameraPosition = effect.Parameters["CameraPosition"];
             if (cameraPosition != null)

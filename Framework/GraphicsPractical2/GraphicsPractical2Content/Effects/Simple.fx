@@ -9,12 +9,13 @@ float4 DiffuseColor,SpecularColor :COLOR0;
 float ColorStrength;
 float3 PointLight;
 float3 LightPositions[MAX_LIGHTS];
+float4 LightColors[MAX_LIGHTS];
 texture Cobblestones;
 
 float3 Eye;
 
 float4 AmbientColor;
-float AmbientIntensity,SpecularPower,SpecularIntensity;
+float AmbientIntensity;
 // Matrices for 3D perspective projection 
 float4x4 View, Projection, World;
 
@@ -68,7 +69,7 @@ float4 LambertianPhong(VertexShaderOutput input)
 		float3 normLightVector = normalize(LightPositions[x] - input.Position3D.xyz);
 			float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
 			float a = clamp(dot(normLightVector, worldNormals), 0, 1);
-		float4 color = DiffuseColor * a;
+		float4 color = LightColors[x] * a;
 			//the phong shading
 			//float3 eyeNorm = normalize(Eye - input.Position3D.xyz);
 		//	float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
@@ -117,10 +118,10 @@ float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 	
 	float4 color = LambertianPhong(input);
 
-	color += mul(AmbientColor, AmbientIntensity);
+	//color += mul(AmbientColor, AmbientIntensity);
 	
 	// zwart wit maken comment weg voor kleur
-	color.rgb = color.r * 0.3 + color.g * 0.59 * color.b * 0.11;
+	//color.rgb = color.r * 0.3 + color.g * 0.59 * color.b * 0.11;
 
 	//color = tex2D(TextureSampler, float2(input.TexCoord.x, input.TexCoord.y));
 	return color;
