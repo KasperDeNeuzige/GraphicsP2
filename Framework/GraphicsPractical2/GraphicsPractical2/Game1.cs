@@ -23,13 +23,8 @@ namespace GraphicsPractical2
         
         // Model
         private Model model;
-        private Texture cobblestones;
         private Material modelMaterial;
 
-        // Quad
-        private VertexPositionNormalTexture[] quadVertices;
-        private short[] quadIndices;
-        private Matrix quadTransform;
 
         public Game1()
         {
@@ -68,45 +63,13 @@ namespace GraphicsPractical2
             // Load the "Simple" effect
             Effect effect = this.Content.Load<Effect>("Effects/Simple");
             // Load the model and let it use the "Simple" effect
-            this.model = this.Content.Load<Model>("Models/Teapot");
+            this.model = this.Content.Load<Model>("Models/bunny");
             this.model.Meshes[0].MeshParts[0].Effect = effect;
-            // Setup the quad
-            this.setupQuad();
-            // Load the quad texture
-            this.cobblestones = this.Content.Load<Texture>("Textures/CobblestonesDiffuse");
         }
 
         /// <summary>
         /// Sets up a 2 by 2 quad around the origin.
         /// </summary>
-        private void setupQuad()
-        {
-            float scale = 50.0f;
-
-            // Normal points up
-            Vector3 quadNormal = new Vector3(0, 1, 0);
-
-            this.quadVertices = new VertexPositionNormalTexture[4];
-            // Top left
-            this.quadVertices[0].Position = new Vector3(-1, 0, -1);
-            this.quadVertices[0].Normal = quadNormal;
-            this.quadVertices[0].TextureCoordinate = new Vector2(0, 0);
-            // Top right
-            this.quadVertices[1].Position = new Vector3(1, 0, -1);
-            this.quadVertices[1].Normal = quadNormal;
-            this.quadVertices[1].TextureCoordinate = new Vector2(1, 0);
-            // Bottom left
-            this.quadVertices[2].Position = new Vector3(-1, 0, 1);
-            this.quadVertices[2].Normal = quadNormal;
-            this.quadVertices[2].TextureCoordinate = new Vector2(0, 1);
-            // Bottom right
-            this.quadVertices[3].Position = new Vector3(1, 0, 1);
-            this.quadVertices[3].Normal = quadNormal;
-            this.quadVertices[3].TextureCoordinate = new Vector2(1, 1);
-
-            this.quadIndices = new short[] { 0, 1, 2, 1, 2, 3 };
-            this.quadTransform = Matrix.CreateScale(scale);
-        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -133,18 +96,11 @@ namespace GraphicsPractical2
             this.camera.SetEffectParameters(effect);
             this.modelMaterial.SetEffectParameters(effect);
 
-            Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
+            Matrix WorldMatrix = Matrix.CreateScale(200.0f, 200.0f, 200.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
             // Draw the model
             mesh.Draw();
 
-            effect.Parameters["Cobblestones"].SetValue(cobblestones);
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, quadVertices, 0, 4, quadIndices, 0, 2);
-            }
 
             base.Draw(gameTime);
         }
