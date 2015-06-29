@@ -102,14 +102,11 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 	float4 resized = mul(worldPosition, Size);
     float4 viewPosition  = mul(resized, View);
 	output.Position2D    = mul(viewPosition, Projection);
-	output.Position3D	= input.Position3D;
-	
-	//output.TexCoord = input.TexCoord;
 	// kleur opdracht
 	output.Normal = mul(input.Normal, World);
 	
 	// checkerboard opdracht
-	output.Position3D	 = worldPosition;
+	output.Position3D = mul(Size, worldPosition);
 
 	return output;
 }

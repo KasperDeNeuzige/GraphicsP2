@@ -31,15 +31,15 @@ namespace GraphicsPractical2
             this.focus = camFocus;
             LightPositions = new Vector3[5];
             LightColors = new Vector4[5];
-            LightPositions[0] = new Vector3(10, 5, 30);
+            LightPositions[0] = new Vector3(-10, 10, 30);
             LightColors[0] = Color.Blue.ToVector4();
-            LightPositions[1] = new Vector3(1, 5, 50);
+            LightPositions[1] = new Vector3(10, 10, 30);
             LightColors[1] = Color.Yellow.ToVector4();
-            LightPositions[2] = new Vector3(100, 5, 10);
+            LightPositions[2] = new Vector3(-5, 10, -4);
             LightColors[2] = Color.Green.ToVector4();
-            LightPositions[3] = new Vector3(20, 5, 25);
+            LightPositions[3] = new Vector3(24, 10, 10);
             LightColors[3] = Color.Red.ToVector4();
-            LightPositions[4] = new Vector3(0, 5, 10);
+            LightPositions[4] = new Vector3(-20, 10, 5);
             LightColors[4] = Color.Purple.ToVector4();
 
             // Create matrices.

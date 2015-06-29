@@ -88,19 +88,19 @@ namespace GraphicsPractical2
 
             this.quadVertices = new VertexPositionNormalTexture[4];
             // Top left
-            this.quadVertices[0].Position = new Vector3(-1, 0, -1);
+            this.quadVertices[0].Position = new Vector3(-1, 0.03f, -1);
             this.quadVertices[0].Normal = quadNormal;
             this.quadVertices[0].TextureCoordinate = new Vector2(0, 0);
             // Top right
-            this.quadVertices[1].Position = new Vector3(1, 0, -1);
+            this.quadVertices[1].Position = new Vector3(1, 0.03f, -1);
             this.quadVertices[1].Normal = quadNormal;
             this.quadVertices[1].TextureCoordinate = new Vector2(1, 0);
             // Bottom left
-            this.quadVertices[2].Position = new Vector3(-1, 0, 1);
+            this.quadVertices[2].Position = new Vector3(-1, 0.03f, 1);
             this.quadVertices[2].Normal = quadNormal;
             this.quadVertices[2].TextureCoordinate = new Vector2(0, 1);
             // Bottom right
-            this.quadVertices[3].Position = new Vector3(1, 0, 1);
+            this.quadVertices[3].Position = new Vector3(1, 0.03f, 1);
             this.quadVertices[3].Normal = quadNormal;
             this.quadVertices[3].TextureCoordinate = new Vector2(1, 1);
 
