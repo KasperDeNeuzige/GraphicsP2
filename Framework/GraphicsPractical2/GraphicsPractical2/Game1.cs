@@ -68,7 +68,7 @@ namespace GraphicsPractical2
             // Load the "Simple" effect
             Effect effect = this.Content.Load<Effect>("Effects/Simple");
             // Load the model and let it use the "Simple" effect
-            this.model = this.Content.Load<Model>("Models/Teapot");
+            this.model = this.Content.Load<Model>("Models/bunny");
             this.model.Meshes[0].MeshParts[0].Effect = effect;
             // Setup the quad
             this.setupQuad();
@@ -133,7 +133,7 @@ namespace GraphicsPractical2
             this.camera.SetEffectParameters(effect);
             this.modelMaterial.SetEffectParameters(effect);
 
-            Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
+            Matrix WorldMatrix = Matrix.CreateScale(200.0f, 200.0f, 200.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
             // Draw the model
             mesh.Draw();
