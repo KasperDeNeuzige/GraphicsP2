@@ -18,11 +18,7 @@ namespace GraphicsPractical2
         private Vector3 focus;
         private Vector3[] LightPositions;
         private Vector4[] LightColors;
-
-        // point/spotlight
-        private Vector3 PointLight = new Vector3(0,50,0);
-        private Vector3 SpotLightDirection = new Vector3(0, -1, 0);
-        private float InnerAngle = 22, OuterAngle = 45;
+        private Vector3 PointLight = new Vector3(50,50,50);
 
         // Calculated matrices
         private Matrix viewMatrix;
@@ -106,11 +102,8 @@ namespace GraphicsPractical2
             // set the five light positions
             effect.Parameters["LightPositions"].SetValue(this.LightPositions);
             effect.Parameters["LightColors"].SetValue(this.LightColors);
-            //set point/spot light
+            //set point light
             effect.Parameters["PointLight"].SetValue(this.PointLight);
-            effect.Parameters["SpotLightDirection"].SetValue(this.SpotLightDirection);
-            effect.Parameters["InnerAngle"].SetValue(this.InnerAngle);
-            effect.Parameters["OuterAngle"].SetValue(this.OuterAngle);
             // If the shader has a global called "CameraPosition", we set it to the right Eye position of the camera.
             EffectParameter cameraPosition = effect.Parameters["CameraPosition"];
             if (cameraPosition != null)

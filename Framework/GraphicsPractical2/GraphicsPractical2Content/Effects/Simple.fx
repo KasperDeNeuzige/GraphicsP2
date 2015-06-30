@@ -8,9 +8,6 @@
 float4 DiffuseColor,SpecularColor :COLOR0;
 float ColorStrength;
 float3 PointLight;
-float3 SpotLightDirection;
-float OuterAngle;
-float InnerAngle;
 float3 LightPositions[MAX_LIGHTS];
 float4 LightColors[MAX_LIGHTS];
 texture Cobblestones;
@@ -21,8 +18,6 @@ float4 AmbientColor;
 float AmbientIntensity;
 // Matrices for 3D perspective projection 
 float4x4 View, Projection, World,Size;
-
-static const float PI = 3.14159265f;
 
 //---------------------------------- Input / Output structures ----------------------------------
 
@@ -67,8 +62,7 @@ float4 NormalColor(VertexShaderOutput input) : TEXCOORD1
 float4 LambertianPhong(VertexShaderOutput input)
 
 {
-	//multiple lights
-	/* 
+	float4 tempcolor = float4(0, 0, 0, 0);
 	for (int x = 0; x < 5; x++)
 	{
 
@@ -82,19 +76,9 @@ float4 LambertianPhong(VertexShaderOutput input)
 			//float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
 		//b = mul(SpecularIntensity, pow(b, SpecularPower));
 		//color = color + (SpecularColor * b);
-	}*/
-
-	//spotlight
-	float3 normLightVector = normalize(PointLight - input.Position3D.xyz);
-		float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
-		float a = clamp(dot(normLightVector, worldNormals), 0, 1);
-	float4 color = DiffuseColor * a;
-		color *= 1- ((max(acos(max(dot(-normLightVector, SpotLightDirection), 0.0f)) / Pi * 180, InnerAngle) - InnerAngle) / max((OuterAngle - InnerAngle), 0.000001));
-
-	float4 tempcolor = float4(0, 0, 0, 0);
-	tempcolor = color + tempcolor;
-
-		return tempcolor;
+		tempcolor = color + tempcolor;
+	}
+	return tempcolor;
 }
 
 // Implement the Procedural texturing assignment here
