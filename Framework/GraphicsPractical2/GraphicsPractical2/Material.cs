@@ -15,28 +15,9 @@ namespace GraphicsPractical2
     /// </summary>
     public struct Material
     {
-        // Color of the ambient light
-        public Color AmbientColor;
-        // Intensity of the ambient light
-        public float AmbientIntensity;
         // The color of the surface (can be ignored if texture is used, or not if you want to blend)
         public Color DiffuseColor;
-        // The texture of the surface
-        public Texture DiffuseTexture;
-        // The normal displacement texture
-        public Texture NormalMap;
-        // The normal displacement factor, to apply the effect in a subtle manner
-        public float DisplacementFactor;
-        // Color of the specular highlight (mostly equal to the color of the light source)
-        public Color SpecularColor;
-        // The intensity factor of the specular highlight, controls it's size
-        public float SpecularIntensity;
-        // The power term of the specular highlight, controls it's smoothness
-        public float SpecularPower;
-        // Special surface color, use normals as color
-        public bool NormalColoring;
-        // Special surface color, procedural colors
-        public bool ProceduralColoring;
+
 
         // Using this function requires all these elements to be present as top-level variables in the shader code. Comment out the ones that you don't use
         public void SetEffectParameters(Effect effect)

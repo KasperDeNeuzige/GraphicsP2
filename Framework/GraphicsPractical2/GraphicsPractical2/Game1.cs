@@ -20,10 +20,13 @@ namespace GraphicsPractical2
 
         // Game objects and variables
         private Camera camera;
-
+        private KeyboardState CurrentKB;
+        private KeyboardState PreviousKB;
+        private int sceneCounter;
+        private SpriteFont Segoe;
         // Model
         private Model model;
-        private Texture cobblestones;
+        private Texture2D E1,E2,E3,E4;
         private Material modelMaterial;
         private float modelRotation;
         // Quad
@@ -57,6 +60,7 @@ namespace GraphicsPractical2
             this.camera = new Camera(new Vector3(0, 50, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             modelRotation = 0.0f;
             this.IsMouseVisible = true;
+            sceneCounter = 0;
             base.Initialize();
         }
 
@@ -72,7 +76,7 @@ namespace GraphicsPractical2
             // Setup the quad
             this.setupQuad();
             // Load the quad texture
-            this.cobblestones = this.Content.Load<Texture>("Textures/CobblestonesDiffuse");
+            Segoe = this.Content.Load<SpriteFont>("Segoe");
         }
 
         /// <summary>
@@ -91,7 +95,7 @@ namespace GraphicsPractical2
             this.quadVertices[0].Normal = quadNormal;
             this.quadVertices[0].TextureCoordinate = new Vector2(0, 0);
             // Top right
-            this.quadVertices[1].Position = new Vector3(1, 0.03f, -1);
+            this.quadVertices[1].Position = new Vector3(100, 0.03f, -1);
             this.quadVertices[1].Normal = quadNormal;
             this.quadVertices[1].TextureCoordinate = new Vector2(1, 0);
             // Bottom left
@@ -115,6 +119,14 @@ namespace GraphicsPractical2
             //update the rotation
             modelRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds *
         MathHelper.ToRadians(0.1f);
+            PreviousKB = CurrentKB;
+            CurrentKB = Keyboard.GetState();
+            if (CurrentKB.IsKeyUp(Keys.Space) && PreviousKB.IsKeyDown(Keys.Space))
+            {
+                sceneCounter += 1;
+                if (sceneCounter == 3)
+                    sceneCounter = 0;
+            }
             base.Update(gameTime);
         }
 
@@ -122,25 +134,53 @@ namespace GraphicsPractical2
         {
             // Clear the screen in a predetermined color and clear the depth buffer
             this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DeepSkyBlue, 1.0f, 0);
-
+            spriteBatch.Begin();
+            //Ensures that the world isn't destroyed by spritebatch
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             // Get the model's only mesh
             ModelMesh mesh = this.model.Meshes[0];
             Effect effect = mesh.Effects[0];
 
-
+            // Allows the viewer to switch through the several techniques.
             // Set the effect parameters
-            effect.CurrentTechnique = effect.Techniques["Simple"];
-            // Matrices for 3D perspective projection
+            
+            if (sceneCounter == 0)
+            {
+                effect.CurrentTechnique = effect.Techniques["Simple"];
+                spriteBatch.DrawString(Segoe, "[E1] Multiple Lights",Vector2.Zero, Color.White);
+            }
+            else if (sceneCounter == 2)
+            {
+                effect.CurrentTechnique = effect.Techniques["Cellshading"];
+                spriteBatch.DrawString(Segoe, "[E3] CellShading", Vector2.Zero, Color.White);
+            }
+            else if (sceneCounter == 1)
+            {
+                effect.CurrentTechnique = effect.Techniques["SpotLight"];
+                spriteBatch.DrawString(Segoe, "[E2] Spotlight", Vector2.Zero, Color.White);
+            }
             this.camera.SetEffectParameters(effect);
             this.modelMaterial.SetEffectParameters(effect);
 
+            // Matrices for 3D perspective projection
             Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
+
+            //Matrix to retain the proper positions for light calculation while the model rotates
             effect.Parameters["tempWorld"].SetValue(WorldMatrix);
+
+            // the rotation matrix
             Matrix Rotate = Matrix.CreateRotationY(modelRotation);
+
+            //the matrix that allows the world to rotate
             WorldMatrix = Rotate * WorldMatrix;
+
+            //the matrix that alters the size of the model and quad
             Matrix Size = Matrix.CreateScale(20.0f, 20.0f, 20.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
             effect.Parameters["Size"].SetValue(Size);
+
             // Draw the model
             mesh.Draw();
 
@@ -149,7 +189,7 @@ namespace GraphicsPractical2
                 pass.Apply();
                 GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, quadVertices, 0, 4, quadIndices, 0, 2);
             }
-
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
