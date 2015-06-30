@@ -20,12 +20,12 @@ namespace GraphicsPractical2
 
         // Game objects and variables
         private Camera camera;
-        
+
         // Model
         private Model model;
         private Texture cobblestones;
         private Material modelMaterial;
-
+        private float modelRotation;
         // Quad
         private VertexPositionNormalTexture[] quadVertices;
         private short[] quadIndices;
@@ -55,9 +55,8 @@ namespace GraphicsPractical2
             this.graphics.ApplyChanges();
             // Initialize the camera
             this.camera = new Camera(new Vector3(0, 50, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-
+            modelRotation = 0.0f;
             this.IsMouseVisible = true;
-
             base.Initialize();
         }
 
@@ -111,10 +110,10 @@ namespace GraphicsPractical2
         protected override void Update(GameTime gameTime)
         {
             float timeStep = (float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f;
-
             // Update the window title
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
-
+            modelRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds *
+        MathHelper.ToRadians(0.1f);
             base.Update(gameTime);
         }
 
@@ -126,6 +125,7 @@ namespace GraphicsPractical2
             // Get the model's only mesh
             ModelMesh mesh = this.model.Meshes[0];
             Effect effect = mesh.Effects[0];
+            
 
             // Set the effect parameters
             effect.CurrentTechnique = effect.Techniques["Simple"];
@@ -134,6 +134,9 @@ namespace GraphicsPractical2
             this.modelMaterial.SetEffectParameters(effect);
 
             Matrix WorldMatrix = Matrix.CreateScale(10.0f, 10.0f, 10.0f);
+            effect.Parameters["tempWorld"].SetValue(WorldMatrix);
+            Matrix Rotate = Matrix.CreateRotationY(modelRotation);
+            WorldMatrix = Rotate * WorldMatrix;
             Matrix Size = Matrix.CreateScale(20.0f, 20.0f, 20.0f);
             effect.Parameters["World"].SetValue(WorldMatrix);
             effect.Parameters["Size"].SetValue(Size);

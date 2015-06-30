@@ -17,7 +17,7 @@ float3 Eye;
 float4 AmbientColor;
 float AmbientIntensity;
 // Matrices for 3D perspective projection 
-float4x4 View, Projection, World,Size;
+float4x4 View, Projection, World,Size,tempWorld;
 
 //---------------------------------- Input / Output structures ----------------------------------
 
@@ -59,7 +59,7 @@ float4 NormalColor(VertexShaderOutput input) : TEXCOORD1
 	return input.Normal;
 }
 
-float4 LambertianPhong(VertexShaderOutput input)
+float4 MultiLambertianStyle(VertexShaderOutput input)
 
 {
 	float4 tempcolor = float4(0, 0, 0, 0);
@@ -70,15 +70,28 @@ float4 LambertianPhong(VertexShaderOutput input)
 			float3 worldNormals = normalize(mul((float3)input.Normal, (float3x3)World));
 			float a = clamp(dot(normLightVector, worldNormals), 0, 1);
 		float4 color = LightColors[x] * a;
-			//the phong shading
-			//float3 eyeNorm = normalize(Eye - input.Position3D.xyz);
-		//	float3 reflectVector = 2 * dot(normLightVector, worldNormals)*worldNormals - normLightVector;
-			//float b = clamp(dot(eyeNorm, reflectVector), 0, 1);
-		//b = mul(SpecularIntensity, pow(b, SpecularPower));
-		//color = color + (SpecularColor * b);
 		tempcolor = color + tempcolor;
 	}
 	return tempcolor;
+}
+
+float4 LambertianStyle(VertexShaderOutput input)
+{
+		float3 normLightVector = normalize(LightPositions[1] - input.Position3D.xyz);
+			float3 worldNormals = normalize(mul(input.Normal, World));
+			float a = clamp(dot(normLightVector, worldNormals), 0, 1);
+		
+		if (a < .25)
+			a = 0;
+		else if (a < .50)
+			a = .25;
+		else if (a < .75)
+			a = .50;
+		else if (a < .1)
+			a = .75;
+	
+		float4 color = LightColors[1] * a;
+	return color;
 }
 
 // Implement the Procedural texturing assignment here
@@ -99,13 +112,14 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 
 	// Do the matrix multiplications for perspective projection and the world transform
 	float4 worldPosition = mul(input.Position3D, World);
+	//aanpassen van wereldgrootte
 	float4 resized = mul(worldPosition, Size);
     float4 viewPosition  = mul(resized, View);
 	output.Position2D    = mul(viewPosition, Projection);
 	// kleur opdracht
-	output.Normal = mul(input.Normal, World);
+	output.Normal = normalize(mul(input.Normal, tempWorld));
 	
-	// checkerboard opdracht
+	// behoud de juiste posities
 	output.Position3D = mul(Size, worldPosition);
 
 	return output;
@@ -113,19 +127,15 @@ VertexShaderOutput SimpleVertexShader(VertexShaderInput input)
 
 float4 SimplePixelShader(VertexShaderOutput input) : COLOR0
 {
-	
-	float4 color = LambertianPhong(input);
-
-	//color += mul(AmbientColor, AmbientIntensity);
-	
+	if (scene == 1)
+	float4 color = LambertianStyle(input);
+	else if (scene == 2)
+	float4 color = MultiLambertianStyle(input);
 	// zwart wit maken comment weg voor kleur
 	//color.rgb = color.r * 0.3 + color.g * 0.59 * color.b * 0.11;
-
-	//color = tex2D(TextureSampler, float2(input.TexCoord.x, input.TexCoord.y));
 	return color;
 }
 
-	
 
 technique Simple
 {
